@@ -13,14 +13,7 @@ except ImportError:
     import pip
     print("pip:")
     pip.main(['install', 'requests', 'configparser'])
-    import time
-    from subprocess import Popen, PIPE
-    from tkinter import messagebox
-    import requests
-    import socket
-    import configparser
-    import base64
-    print("Модули успешно установлены, продолжаю работу")
+    print("Модули установлены, продолжаю перезапустите программу.")
     
       
 """   
@@ -83,37 +76,6 @@ class config:
         except Exception as e:
             print(f"MBASE: Ошибка при чтении файла конфигурации: {e}")
             return ["Ошибка при чтении файла конфигурации"]
-    
-
-class AIollama:
-    def __init__(self, ollama_url: str = "http://localhost:11434/api/generate", model: str = "llama3.1", timeout: int = 30):
-        self.ollama_url = ollama_url
-        self.model = model
-        self.timeout = timeout
-    
-        try:
-            requests.get(self.ollama_url, timeout=self.timeout)  # Проверка доступности эндпоинта
-        except requests.exceptions.RequestException as e:
-            print(f"MBASE: Ошибка при эндпоинта Ollama: {e}")
-            raise e
-    def generate(self, text: str, image: bytes=None):
-        """ Отправляет текст и опционально изображение в Ollama для генерации ответа.
-
-        Возвращает словарь с результатом или подробной ошибкой в поле 'error'.
-        """
-        payload = {
-            "model": self.model,
-            "prompt": text,
-            "image": base64.b64encode(image).decode('utf-8') if image else None
-        }
-        
-        try:
-            response = requests.post(self.ollama_url, json=payload, timeout=self.timeout)
-            response.raise_for_status()
-            return response.json()
-        except requests.exceptions.RequestException as e:
-            print(f"MBASE: Ошибка при запросе к Ollama: {e}")
-            return {"error": str(e)}
             
         
 class system:
@@ -139,14 +101,14 @@ class web:
         http_errors = {
             200: "Успешный запрос",
             400: "Возможно, ошибка куки, попробуйте очистить куки",
-            401: "Возможно, ошибка авторизации",
-            403: "Скорее всего, у вас нет доступа к этому ресурсу",
+            401: "Ошибка авторизации",
+            403: "У вас нет доступа к этому ресурсу",
             404: "Страница не найдена",
-            500: "Внутренняя ошибка сервера, попробуйте позже",
+            500: "Внутренняя ошибка сервера, попробуйте позже или обновите браузер/приложение",
             502: "Возможно, высокая нагрузка на сервер, или ошибка VPN",
             503: "Сервис в данный момент недоступен, попробуйте позже",
             504: "Попробуйте перезагрузить сайт или перезагрузить ваш роутер",
-            505: "Версия HTTP не поддерживается сервером, попробуйте использовать другой браузер или обновить его"
+            505: "Версия HTTP не поддерживается сервером, попробуйте обновить браузер/приложение"
         }
         return http_errors.get(code, "Неизвестная ошибка HTTP, код (http_errors): {}".format(code))
 
