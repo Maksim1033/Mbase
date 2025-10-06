@@ -72,6 +72,6 @@ if isinstance(resp, dict):
 	print('Ошибка web:', resp)
 else:
     print('OK, code', resp.status_code)
-    print('Возможная причина по мнению Mbase:', web.http_error(resp.status_code))
+    print('Расшифровка кода от Mbase: ', web.http_error(resp.status_code))
 ```
 

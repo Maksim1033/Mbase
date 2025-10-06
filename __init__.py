@@ -1,4 +1,4 @@
-try:
+try:    
     import time
     from subprocess import Popen, PIPE
     from tkinter import messagebox
@@ -14,12 +14,11 @@ except ImportError:
     print("pip:")
     pip.main(['install', 'requests', 'configparser'])
     print("Модули установлены, продолжаю перезапустите программу.")
-    
-      
-"""   
+"""     
 Удобная библиотека с базовыми инструментами: mbase
 Автор: Maxim1033
-"""  
+Version: 0.1.2
+"""     
        
 class config:
     """Mbase: Создание и управление конфигурацией.
@@ -100,6 +99,11 @@ class web:
         """ Возвращает текстовое описание HTTP ошибки по коду. Эта функция сделалана Maksim1033, Xanthurs """
         http_errors = {
             200: "Успешный запрос",
+            201: "Запрос принят и обработан",
+            202: "Запрос принят, но не обработан",
+            203: "Информация в ответе может быть неактуальна",
+            204: "Нет содержимого для отображения",
+            205: "Содержимое сброшено",
             400: "Возможно, ошибка куки, попробуйте очистить куки",
             401: "Ошибка авторизации",
             403: "У вас нет доступа к этому ресурсу",
@@ -124,6 +128,7 @@ class web:
                     "response": response.text
                 }
             return response
+            
         except requests.exceptions.RequestException as e:
             return {"error": str(e)}
 
