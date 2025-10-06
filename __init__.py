@@ -116,5 +116,4 @@ class web:
         }
         return http_errors.get(code, "Неизвестная ошибка HTTP, код (http_errors): {}".format(code))
 
-            
 
