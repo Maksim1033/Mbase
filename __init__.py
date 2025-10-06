@@ -116,19 +116,5 @@ class web:
         }
         return http_errors.get(code, "Неизвестная ошибка HTTP, код (http_errors): {}".format(code))
 
-    def request(url, data, method='GET', headers=None, params=None, json=None, timeout=10):
-        """ Выполняет HTTP-запрос к указанному URL. Возвращает ответ в переменную. """
-        try:
-            response = requests.request(method, url, headers=headers, params=params, data=data, json=json, timeout=timeout)
-            if response.status_code != 200:
-                return {
-                    "status": "http_error",
-                    "code": response.status_code,
-                    "Mbase": web.http_error(response.status_code),
-                    "response": response.text
-                }
-            return response
             
-        except requests.exceptions.RequestException as e:
-            return {"error": str(e)}
 
