@@ -4,6 +4,7 @@ try:
     from tkinter import messagebox
     import requests
     import socket
+    import logging
     import configparser
     import base64
 except ImportError:
@@ -13,11 +14,11 @@ except ImportError:
     import pip
     print("pip:")
     pip.main(['install', 'requests', 'configparser'])
-    print("Модули установлены, продолжаю перезапустите программу.")
+    print("Модули установлены, перезапустите программу.")
 """     
 Удобная библиотека с базовыми инструментами: mbase
 Автор: Maxim1033
-Version: 0.1.2
+Version: 0.1.3
 """     
        
 class config:
@@ -32,10 +33,8 @@ class config:
             conf[category] = {}
             with open(filename, 'w') as configfile:
                 conf.write(configfile)
-            return conf[category]
         except Exception as e:
-            print(f"MBASE: Ошибка при создании файла конфигурации: {e}")
-            return ["Ошибка при создании файла конфигурации"]
+            print(f"MBASE: Ошибка при создании файла конфигурации: {str(e)}")
     def write(self, item, value, category="General", filename=None, conf=configparser.ConfigParser()):
         """ Запись конфигурации в файл. 
         :param item: Название
@@ -76,17 +75,40 @@ class config:
             print(f"MBASE: Ошибка при чтении файла конфигурации: {e}")
             return ["Ошибка при чтении файла конфигурации"]
             
+class logger:
+    @staticmethod
+    def setup_logger(name: str = "logger", log_file: str = "log.txt", level=logging.DEBUG) -> logging.Logger:
+        """Создает и настраивает логгер.
         
+        :param name: Имя логгера.
+        :param log_file: Путь к файлу для записи логов.
+        :param level: Уровень логирования.
+        :return: Настроенный логгер.
+        """
+        
+        formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+        handler = logging.FileHandler(log_file)        
+        handler.setFormatter(formatter)
+
+        logger = logging.getLogger(name)
+        logger.setLevel(level)
+        logger.addHandler(handler)
+
+        return logger
+
 class system:
+    @staticmethod
     def tasklist():
         """ Получает список запущенных задач в системе. Нужно указать присваемую переменную для получения результата."""
         tasks = [line.decode('cp866', 'ignore') for line in Popen('tasklist', stdout=PIPE).stdout.readlines()]
         return tasks
 
+    @staticmethod
     def msg(text, title="Сообщение"):
         """ Отправляет сообщение в виде всплывающего окна. """
         messagebox.showinfo(text, title)
 
+    @staticmethod
     def ip():
             """ Получает IP-адрес, имя хоста текущей машины. Нужно указать присваемую переменную для получения результата."""
             hostname = socket.gethostname()
@@ -95,6 +117,7 @@ class system:
 
 
 class web:
+    @staticmethod
     def http_error(code):
         """ Возвращает текстовое описание HTTP ошибки по коду. Эта функция сделалана Maksim1033, Xanthurs """
         http_errors = {
@@ -117,3 +140,49 @@ class web:
         return http_errors.get(code, "Неизвестная ошибка HTTP, код (http_errors): {}".format(code))
 
 
+class time:
+    @staticmethod
+    def sleep(minutes=None, hours=None):
+        """ Задержка выполнения программы на указанное количество минут или часов. """
+        ts = time.sleep
+        if minutes is not None:
+            ts(minutes * 60)
+        elif hours is not None:
+            ts(hours * 3600)
+    
+    @staticmethod
+    def current_time(format="%H:%M:%S", timezone=time.localtime()):
+        """ Получает текущее время в формате ЧЧ:ММ:СС. Нужно указать присваемую переменную для получения результата."""
+        return time.strftime(format, timezone)
+    
+    @staticmethod
+    def days_decode(days, text=True):
+        """ Преобразует количество дней в годы, месяцы и дни. Нужно указать присваемую переменную для получения результата."""
+        years, remainder = divmod(days, 365)
+        months, remaining_days = divmod(remainder, 30)
+
+        if not text:
+            return years, months, remaining_days
+
+        def choose_form(value: int, forms: tuple[str, str, str]) -> str:
+            """Подбирает правильную форму слова для русского языка."""
+            if value % 100 in (11, 12, 13, 14):
+                return forms[2]
+            last = value % 10
+            if last == 1:
+                return forms[0]
+            if last in (2, 3, 4):
+                return forms[1]
+            return forms[2]
+
+        def format_part(value: int, forms: tuple[str, str, str]):
+            return f"{value} {choose_form(value, forms)}" if value > 0 else None
+
+        parts = [
+            format_part(years, ("год", "года", "лет")),
+            format_part(months, ("месяц", "месяца", "месяцев")),
+            format_part(remaining_days, ("день", "дня", "дней")),
+        ]
+
+        return ", ".join(part for part in parts if part) or "0 дней"
+    
