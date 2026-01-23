@@ -1,24 +1,50 @@
-try:    
-    import time
-    from subprocess import Popen, PIPE
-    from tkinter import messagebox
-    import requests
-    import socket
-    import logging
-    import configparser
-    import base64
-except ImportError:
-    print("Библиотека MBASE: Ошибка импорта модулей, пытаюсь установить недостающие модули")
-    print("5 секунд...")
-    time.sleep(5)
-    import pip
-    print("pip:")
-    pip.main(['install', 'requests', 'configparser'])
-    print("Модули установлены, перезапустите программу.")
+import sys
+import subprocess
+import importlib
+
+# --- стандартная библиотека ---
+import time
+import socket
+import logging
+import configparser
+from subprocess import Popen, PIPE
+from tkinter import messagebox
+
+# --- внешние зависимости ---
+REQUIRED_PACKAGES = [
+    'requests',
+]
+
+def ensure_packages(packages):
+    missing = []
+
+    for pkg in packages:
+        try:
+            importlib.import_module(pkg)
+        except ImportError:
+            missing.append(pkg)
+
+    if missing:
+        print("MBASE: отсутствуют модули:", ", ".join(missing))
+        print("Устанавливаю...")
+
+        subprocess.check_call([
+            sys.executable, "-m", "pip", "install", *missing
+        ])
+
+        print("Установка завершена. Перезапусти программу.")
+        sys.exit(1)
+
+
+ensure_packages(REQUIRED_PACKAGES)
+
+# гарантированный импорт после установки
+import requests
+
 """     
 Удобная библиотека с базовыми инструментами: mbase
 Автор: Maxim1033
-Version: 0.1.3.1
+Version: VERSION
 """     
        
 class config:
