@@ -77,3 +77,4 @@ else:
     print('Расшифровка кода от Mbase: ', web.http_error(resp.status_code))
 ```
 
+Создано TopGworks.Maksim1033
