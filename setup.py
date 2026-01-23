@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-# На время разработки (V.1)
+# На время разработки ( Version<1.0.0 ), данный файл будет использоваться.
 
 setup(
     name="mbase",
