@@ -18,7 +18,7 @@ except ImportError:
 """     
 Удобная библиотека с базовыми инструментами: mbase
 Автор: Maxim1033
-Version: 0.1.3
+Version: 0.1.3.1
 """     
        
 class config:
@@ -75,7 +75,7 @@ class config:
             print(f"MBASE: Ошибка при чтении файла конфигурации: {e}")
             return ["Ошибка при чтении файла конфигурации"]
             
-class logger:
+class mlogger:
     @staticmethod
     def setup_logger(name: str = "logger", log_file: str = "log.txt", level=logging.DEBUG) -> logging.Logger:
         """Создает и настраивает логгер.
