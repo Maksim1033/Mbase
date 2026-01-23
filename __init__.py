@@ -47,7 +47,7 @@ import requests
 Version: VERSION
 """     
        
-class config:
+class mconfig:
     """Mbase: Создание и управление конфигурацией.
     """
     def __init__(self, filename='config.ini', category="General", conf=configparser.ConfigParser()):
@@ -122,7 +122,7 @@ class mlogger:
 
         return logger
 
-class system:
+class msystem:
     @staticmethod
     def tasklist():
         """ Получает список запущенных задач в системе. Нужно указать присваемую переменную для получения результата."""
@@ -142,7 +142,7 @@ class system:
             return ip, hostname
 
 
-class web:
+class mweb:
     @staticmethod
     def http_error(code):
         """ Возвращает текстовое описание HTTP ошибки по коду. Эта функция сделалана Maksim1033, Xanthurs """
@@ -166,7 +166,7 @@ class web:
         return http_errors.get(code, "Неизвестная ошибка HTTP, код (http_errors): {}".format(code))
 
 
-class time:
+class mtime:
     @staticmethod
     def sleep(minutes=None, hours=None):
         """ Задержка выполнения программы на указанное количество минут или часов. """
